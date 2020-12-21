@@ -1,4 +1,4 @@
-# JuliaLambdaExample
+# aws-lambda-container-julia
 
 As of December 2020, AWS supports running Lambda functions from any container image.
 This is an example of deploying Julia program as AWS lambda.
