@@ -1,5 +1,8 @@
 module JuliaLambdaExample
 
-# Write your package code here.
+function handle_event(event_data, headers)
+    @info "Handling request" event_data
+    return "hello world"
+end
 
 end
