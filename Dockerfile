@@ -9,17 +9,24 @@ RUN yum install -y tar gzip \
  && rm julia-1.5.3-linux-x86_64.tar.gz \
  && ln -s julia-1.5.3 julia
 
+# Install bootstrap script
 WORKDIR /var/runtime
 COPY bootstrap .
 
+# Installl application
 WORKDIR /var/task
 
+# Use a special depot path to store precompiled binaries
 ENV JULIA_DEPOT_PATH /var/task/.julia
 
+# Copy application code
 COPY . .
 
+# Instantiate project and precompile packages
 RUN /usr/local/julia/bin/julia --project=. -e "using Pkg; Pkg.instantiate(); Pkg.API.precompile()"
 
-ENV JULIA_DEPOT_PATH /tmp/julia:/var/task/.julia
+# Uncomment this line to allow more precompilation in lamdbda just in case
+#ENV JULIA_DEPOT_PATH /tmp/.julia:/var/task/.julia
 
+# This is technically not used but is required by Lambda
 CMD [ "handle_event"]

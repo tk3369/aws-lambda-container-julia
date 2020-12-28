@@ -3,4 +3,5 @@
 # receives the very first invocation request.
 
 cd /var/task
+
 /usr/local/julia/bin/julia --project=. main.jl

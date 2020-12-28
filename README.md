@@ -5,46 +5,50 @@ This is an example of deploying Julia program as AWS lambda.
 
 ## How it works
 
-The Dockerfile pulls from a standard Julia base image. It copies the project content
-to the standard deployment directory `/var/task`. By setting `JULIA_DEPOT_PATH` environment
-variable, the precompiled files will be stored in a known location. In addition, because
-AWS Lambda provides a read-only file system, `JULIA_DEPOT_PATH` is again set to include
-`/tmp/.julia` compilation files during runtime.
+The `Dockerfile` uses an AWS provided base image. It is more convenient because their
+base image already includes the 
+[Runtime Interface Emulator](https://docs.aws.amazon.com/lambda/latest/dg/runtimes-images.html#runtimes-test-emulator) (RIE).  It would be possible
+to use a different base image but then the RIE has to be installed separately.
+Julia is downloaded and installed from the official julialang.org web site.
+
+Project content are copied to the standard deployment directory `/var/task`. 
+By setting `JULIA_DEPOT_PATH` environment variable, the precompiled files 
+will be stored in a known location. 
+
+Note that AWS Lambda provides a read-only file system. If needed, the `JULIA_DEPOT_PATH`
+can be reset to include `/tmp/.julia` for additional precompilation during runtime.
 
 As required, Lambda functions must support the 
 [Lambda Runtime API](https://docs.aws.amazon.com/lambda/latest/dg/runtimes-api.html).
 The `main.jl` file implements the general workflow of this API, which involves
-fetching incoming requests, calling user function, and reporting results back
-to the Lambda execution environment.
+fetching lambda invocation requests, calling the `handle_event` function,
+and reporting results back to the Lambda execution environment.  
 
 This main program delegates lambda requests to the underlying module. In this case,
 it's called `JuliaLambdaExample`. The module must define a function called
 `handle_event` and the function must accept two arguments - `event_data` and `headers`.
-The return value of this function will be recorded with lambda runtime.
+The return value of this function is then passed back to the lambda environment.
 
 ## How to use this repo
 
 To build your own AWS Lambda function, you can copy this repo and rename the
 `JuliaLambdaExample` to whatever you want. Just make sure that all references
-are renamed properly, including those in the `main.jl` file.
+are renamed properly.
 
 There is a convenient shell script in `scripts/deploy.sh` that can be used to
-quickly build/tag/push a Docker image, and update the function on AWS. 
+quickly build/tag/push a Docker image and deploy the function on AWS. 
 
 For example:
 ```
-sh scripts/deploy.sh lambda-docker-julia-test1 latest
+sh scripts/deploy.sh julia-lambda latest
 ```
 
-Before you use this script, you must:
-1. Create the repository in AWS ECR
-2. Create the lambda function with the first Docker image
+The script does not deploy the lambda function unless it is already created.
+Hence, just for the first time, you must create the lambda function using
+your preferred approach (web interface, cloud formation, CDK, etc.)
 
-## What next
+## Contributions welcome!
 
-In order to test lambda container images locally, we could include the Lambda Runtime
-Interface Emulator (RIE) in the same image. 
-See https://docs.aws.amazon.com/lambda/latest/dg/images-test.html
+Feel free to raise an issue or PR if you would like to contribute to this
+repo.
 
-The `deploy.sh` script can be improved to auto-create the repo in ECR as
-well as installing the first image.

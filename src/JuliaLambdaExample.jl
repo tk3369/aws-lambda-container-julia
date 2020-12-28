@@ -2,8 +2,10 @@ module JuliaLambdaExample
 
 using JSON
 
+# Must export `handle_event` function
 export handle_event
 
+# Put any extra initialization code here
 function __init__()
     @info "Initializing module"
 end
@@ -17,15 +19,17 @@ function monte_carlo_pi(n)
 end
 
 # Handle a lambda invocation event
-# Input: JSON string with
 function handle_event(event_data, headers = [])
     @info "Handling request" event_data headers
+
     parsed_data = JSON.parse(event_data)
     simulations = get(parsed_data, "simulations", 0)
     if simulations > 0
         my_pi = monte_carlo_pi(simulations)
         return JSON.json(Dict("pi" => my_pi))
     end
+
+    # Raising an exception would cause the event to be logged and discarded
     error("Please specify the number of simulations")
 end
 
