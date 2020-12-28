@@ -1,0 +1,6 @@
+#!/bin/sh
+# This script is called by the lambda execution environment when it
+# receives the very first invocation request.
+
+cd /var/task
+/usr/local/julia/bin/julia --project=. main.jl
