@@ -7,6 +7,8 @@ const LAMBDA_TASK_ROOT = ENV["LAMBDA_TASK_ROOT"]
 const HANDLER = Symbol(get(ENV, "_HANDLER", "handle_event"))
 const RUNTIME_URL = "http://$AWS_LAMBDA_RUNTIME_API/2018-06-01"
 
+@info "Settings" AWS_LAMBDA_RUNTIME_API LAMBDA_TASK_ROOT HANDLER
+
 # Convenient functions
 function post_error(path::AbstractString, ex::Exception)
     headers = [
