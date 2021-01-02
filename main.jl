@@ -1,10 +1,10 @@
 # NOTE: change this constant with your application module name
-const appmodule = :JuliaLambdaExample
+const MODULE = :JuliaLambdaExample
 
 @info "Initializing lambda"
 const AWS_LAMBDA_RUNTIME_API = ENV["AWS_LAMBDA_RUNTIME_API"]
 const LAMBDA_TASK_ROOT = ENV["LAMBDA_TASK_ROOT"]
-const _HANDLER = ENV["_HANDLER"]
+const HANDLER = Symbol(get(ENV, "_HANDLER", "handle_event"))
 const RUNTIME_URL = "http://$AWS_LAMBDA_RUNTIME_API/2018-06-01"
 
 # Convenient functions
@@ -33,7 +33,7 @@ try
     using JSON
     @info "Completed loading required modules"
 
-    @eval using $appmodule
+    @eval using $MODULE
     @info "Completed loading custom module"
 catch ex
     @error "Initializtion error" ex
@@ -53,7 +53,7 @@ while true
         @info "Received event" request_id
         state = :received
 
-        response = handle_event(String(request.body), request.headers)
+        response = @eval $(MODULE).$(HANDLER)(String($request.body), $request.headers)
         @info "Got response from handler" response
         state = :handled
 
