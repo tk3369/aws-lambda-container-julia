@@ -13,7 +13,7 @@ RUN yum install -y tar gzip \
 WORKDIR /var/runtime
 COPY bootstrap .
 
-# Installl application
+# Install application
 WORKDIR /var/task
 
 # Use a special depot path to store precompiled binaries
