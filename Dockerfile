@@ -9,10 +9,6 @@ RUN yum install -y tar gzip \
  && rm julia-1.5.3-linux-x86_64.tar.gz \
  && ln -s julia-1.5.3 julia
 
-# Install bootstrap script
-WORKDIR /var/runtime
-COPY bootstrap .
-
 # Install application
 WORKDIR /var/task
 
@@ -26,7 +22,11 @@ COPY . .
 RUN /usr/local/julia/bin/julia --project=. -e "using Pkg; Pkg.instantiate(); Pkg.API.precompile()"
 
 # Uncomment this line to allow more precompilation in lamdbda just in case
-#ENV JULIA_DEPOT_PATH /tmp/.julia:/var/task/.julia
+ENV JULIA_DEPOT_PATH /tmp/.julia:/var/task/.julia
+
+# Install bootstrap script
+WORKDIR /var/runtime
+COPY bootstrap .
 
 # Which module/function to call?
 CMD [ "JuliaLambdaExample.handle_event"]
