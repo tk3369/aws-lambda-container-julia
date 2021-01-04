@@ -28,5 +28,5 @@ RUN /usr/local/julia/bin/julia --project=. -e "using Pkg; Pkg.instantiate(); Pkg
 # Uncomment this line to allow more precompilation in lamdbda just in case
 #ENV JULIA_DEPOT_PATH /tmp/.julia:/var/task/.julia
 
-# This is technically not used but is required by Lambda
-CMD [ "handle_event"]
+# Which module/function to call?
+CMD [ "JuliaLambdaExample.handle_event"]
