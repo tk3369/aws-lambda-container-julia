@@ -1,4 +1,5 @@
 # AWS provided base image (Amazon Linux 2)
+# It includes Lambda Runtime Emulator for testing locally.
 FROM public.ecr.aws/lambda/provided:al2
 
 # Download and install Julia
@@ -21,7 +22,8 @@ COPY . .
 # Instantiate project and precompile packages
 RUN /usr/local/julia/bin/julia --project=. -e "using Pkg; Pkg.instantiate(); Pkg.API.precompile()"
 
-# Uncomment this line to allow more precompilation in lamdbda just in case
+# Uncomment this line to allow more precompilation in lamdbda just in case.
+# That's because /var/task is a read-only path during runtime.
 ENV JULIA_DEPOT_PATH /tmp/.julia:/var/task/.julia
 
 # Install bootstrap script

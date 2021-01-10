@@ -6,7 +6,8 @@ const LAMBDA_TASK_ROOT = ENV["LAMBDA_TASK_ROOT"]
 const HANDLER = ENV["_HANDLER"]
 const RUNTIME_URL = "http://$AWS_LAMBDA_RUNTIME_API/2018-06-01"
 
-# Using curl as HTTP client
+# Using curl as HTTP client.
+# (Don't want to introduce HTTP dependency for faster initialization)
 
 function http_get(url)
     cmd = `curl --silent --show-error --location --include --request GET $url`
