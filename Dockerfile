@@ -30,5 +30,8 @@ ENV JULIA_DEPOT_PATH /tmp/.julia:/var/task/.julia
 WORKDIR /var/runtime
 COPY bootstrap .
 
+# Create an empty extensions directory
+WORKDIR /opt/extensions
+
 # Which module/function to call?
 CMD [ "JuliaLambdaExample.handle_event"]
