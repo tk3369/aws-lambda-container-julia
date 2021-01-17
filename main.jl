@@ -68,7 +68,6 @@ while true
         @info "Received event" request_id
         state = :received
 
-        # response = @eval $(mod[]).$(func[])($request_body, $request_headers)
         response  = my_handler(request_body, request_headers)
         @info "Got response from handler" response
         state = :handled
