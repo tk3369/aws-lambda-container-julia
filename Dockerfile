@@ -16,11 +16,13 @@ WORKDIR /var/task
 # Use a special depot path to store precompiled binaries
 ENV JULIA_DEPOT_PATH /var/task/.julia
 
+# Instantiate project and precompile packages
+COPY Manifest.toml .
+COPY Project.toml .
+RUN /usr/local/julia/bin/julia --project=. -e "using Pkg; Pkg.instantiate(); Pkg.API.precompile()"
+
 # Copy application code
 COPY . .
-
-# Instantiate project and precompile packages
-RUN /usr/local/julia/bin/julia --project=. -e "using Pkg; Pkg.instantiate(); Pkg.API.precompile()"
 
 # Uncomment this line to allow more precompilation in lamdbda just in case.
 # That's because /var/task is a read-only path during runtime.
