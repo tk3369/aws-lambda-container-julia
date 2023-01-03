@@ -5,10 +5,10 @@ FROM public.ecr.aws/lambda/provided:al2
 # Download and install Julia
 WORKDIR /usr/local
 RUN yum install -y tar gzip \
- && curl -LO https://julialang-s3.julialang.org/bin/linux/x64/1.5/julia-1.5.3-linux-x86_64.tar.gz \
- && tar xf julia-1.5.3-linux-x86_64.tar.gz \
- && rm julia-1.5.3-linux-x86_64.tar.gz \
- && ln -s julia-1.5.3 julia
+ && curl -LO https://julialang-s3.julialang.org/bin/linux/x64/1.8/julia-1.8.4-linux-x86_64.tar.gz \
+ && tar xf julia-1.8.4-linux-x86_64.tar.gz \
+ && rm julia-1.8.4-linux-x86_64.tar.gz \
+ && ln -s julia-1.8.4 julia
 
 # Install application
 WORKDIR /var/task
@@ -30,7 +30,7 @@ ENV JULIA_DEPOT_PATH /tmp/.julia:/var/task/.julia
 
 # Install bootstrap script
 WORKDIR /var/runtime
-COPY bootstrap .
+COPY --chmod=0755 bootstrap .
 
 # Create an empty extensions directory
 WORKDIR /opt/extensions
