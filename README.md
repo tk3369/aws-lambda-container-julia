@@ -58,7 +58,7 @@ Hence, just for the first time, you must create the lambda function using
 your preferred approach (web interface, cloud formation, CDK, etc.)
 
 So, just for the first time, the procedure may be a little awkward:
-1. Run the deploy script above. The push will fail but an image should be pushed to ECR.
+1. Run the deploy script above. The script will fail but an image should be pushed to ECR.
 2. Create the function with the ECR image URI.
 
 From this point on, you just need to run the deploy script for any update.
