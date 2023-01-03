@@ -3,6 +3,9 @@
 As of December 2020, AWS supports running Lambda functions from any container image.
 This is an example of deploying Julia program as AWS lambda.
 
+Update Jan 2, 2023:
+This repo has been updated to use the latest version of Julia (1.8.4).
+
 ## How it works
 
 The `Dockerfile` uses an AWS provided base image. It is more convenient because their
@@ -44,12 +47,21 @@ quickly build/tag/push a Docker image and deploy the function on AWS.
 
 For example:
 ```
-sh scripts/deploy.sh julia-lambda latest
+DOCKER_BUILDKIT=1 sh scripts/deploy.sh julia-lambda latest
 ```
+
+Note that the `DOCKER_BUILDKIT` is required for using setting the executable flag
+for `/var/runtime/bootstrap` file.
 
 The script does not deploy the lambda function unless it is already created.
 Hence, just for the first time, you must create the lambda function using
 your preferred approach (web interface, cloud formation, CDK, etc.)
+
+So, just for the first time, the procedure may be a little awkward:
+1. Run the deploy script above. The push will fail but an image should be pushed to ECR.
+2. Create the function with the ECR image URI.
+
+From this point on, you just need to run the deploy script for any update.
 
 ## Contributions welcome!
 
